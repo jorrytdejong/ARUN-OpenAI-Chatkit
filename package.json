@@ -1,0 +1,16 @@
+{
+  "name": "chatkit",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail --names backend,frontend \"npm run backend\" \"npm run frontend\"",
+    "frontend": "npm --prefix frontend install && npm --prefix frontend run dev",
+    "backend": "./backend/scripts/run.sh",
+    "heroku-postbuild": "npm --prefix frontend ci --include=dev && npm --prefix frontend run build"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

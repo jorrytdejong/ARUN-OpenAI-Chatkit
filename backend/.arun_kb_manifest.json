@@ -1,0 +1,375 @@
+{
+  "files": {
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/1 - PREPARING for your Juice Adventure.docx": {
+      "modified_at_ns": 1775299715836183325,
+      "openai_file_id": "file-PrmXtpZzEfwJH1unGB813r",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/1 - PREPARING for your Juice Adventure.docx",
+      "size": 199427,
+      "status": "completed",
+      "vector_store_file_id": "file-PrmXtpZzEfwJH1unGB813r",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/2 - GENERAL GUIDELINES for Juicing.docx": {
+      "modified_at_ns": 1775299715837074324,
+      "openai_file_id": "file-XocD2MSJZjDN6DBeBiibGW",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/2 - GENERAL GUIDELINES for Juicing.docx",
+      "size": 15964,
+      "status": "completed",
+      "vector_store_file_id": "file-XocD2MSJZjDN6DBeBiibGW",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/2020 & 2022  JUICE Detox info & Recipes by Anasha.docx": {
+      "modified_at_ns": 1775299715838029823,
+      "openai_file_id": "file-WgJhfAk8fNsiF5JnXEsrmA",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/2020 & 2022  JUICE Detox info & Recipes by Anasha.docx",
+      "size": 40746,
+      "status": "completed",
+      "vector_store_file_id": "file-WgJhfAk8fNsiF5JnXEsrmA",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/2022 Meditative Juice Cleanse - Links and other interesting info +.docx": {
+      "modified_at_ns": 1775299715839271572,
+      "openai_file_id": "file-7iEQuLmrYWu7GSze4XjA1X",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/2022 Meditative Juice Cleanse - Links and other interesting info +.docx",
+      "size": 341828,
+      "status": "completed",
+      "vector_store_file_id": "file-7iEQuLmrYWu7GSze4XjA1X",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/2025 ARUN Self-Healing Juice Cleanse.docx": {
+      "modified_at_ns": 1775299715839728405,
+      "openai_file_id": "file-3Rv3i5AUYu9d5TqAG795ng",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/2025 ARUN Self-Healing Juice Cleanse.docx",
+      "size": 13677,
+      "status": "completed",
+      "vector_store_file_id": "file-3Rv3i5AUYu9d5TqAG795ng",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/3 - How to Break the fast - guidelines and recipes - what to eat after Juicing.docx": {
+      "modified_at_ns": 1775299715840288821,
+      "openai_file_id": "file-EmVgv4VTUKXR1HH2AD6Hfx",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/3 - How to Break the fast - guidelines and recipes - what to eat after Juicing.docx",
+      "size": 23984,
+      "status": "completed",
+      "vector_store_file_id": "file-EmVgv4VTUKXR1HH2AD6Hfx",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/ARUN Fitness for the Witness~ 6 sides and a Center to everything.._.docx": {
+      "modified_at_ns": 1775299715840671820,
+      "openai_file_id": "file-VZ8yd5FhWjFZuzXS1KMK2k",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/ARUN Fitness for the Witness~ 6 sides and a Center to everything.._.docx",
+      "size": 12720,
+      "status": "completed",
+      "vector_store_file_id": "file-VZ8yd5FhWjFZuzXS1KMK2k",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day1.txt": {
+      "modified_at_ns": 1757174892000000000,
+      "openai_file_id": "",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day1.txt",
+      "size": 0,
+      "status": "skipped_empty",
+      "vector_store_file_id": "",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day2.txt": {
+      "modified_at_ns": 1775299715843637192,
+      "openai_file_id": "file-73wrHrpBSjoJJ3KbjYGY46",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day2.txt",
+      "size": 51045,
+      "status": "completed",
+      "vector_store_file_id": "file-73wrHrpBSjoJJ3KbjYGY46",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day3.txt": {
+      "modified_at_ns": 1775299715845057566,
+      "openai_file_id": "file-A2XhojXzsG7zsLdetgyiYQ",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day3.txt",
+      "size": 54215,
+      "status": "completed",
+      "vector_store_file_id": "file-A2XhojXzsG7zsLdetgyiYQ",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day4.txt": {
+      "modified_at_ns": 1775299715845962357,
+      "openai_file_id": "file-VTnrKoGbfjMZuRanC1ySxu",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day4.txt",
+      "size": 46412,
+      "status": "completed",
+      "vector_store_file_id": "file-VTnrKoGbfjMZuRanC1ySxu",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day5.txt": {
+      "modified_at_ns": 1775299715847184689,
+      "openai_file_id": "file-9M8AhPHRpYw2pWYKNGfttu",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day5.txt",
+      "size": 55644,
+      "status": "completed",
+      "vector_store_file_id": "file-9M8AhPHRpYw2pWYKNGfttu",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day6.txt": {
+      "modified_at_ns": 1775299715848507437,
+      "openai_file_id": "file-EN9jYJU1J6GkyNKNc8fMvS",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day6.txt",
+      "size": 59497,
+      "status": "completed",
+      "vector_store_file_id": "file-EN9jYJU1J6GkyNKNc8fMvS",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day7.txt": {
+      "modified_at_ns": 1775299715848915770,
+      "openai_file_id": "file-VTFeo7UihtDHvBCBTztVWp",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2021raw_day7.txt",
+      "size": 53552,
+      "status": "completed",
+      "vector_store_file_id": "file-VTFeo7UihtDHvBCBTztVWp",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day1.txt": {
+      "modified_at_ns": 1775299715849773394,
+      "openai_file_id": "file-UJEk3u7bYLNqCnmtEPtZmW",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day1.txt",
+      "size": 63058,
+      "status": "completed",
+      "vector_store_file_id": "file-UJEk3u7bYLNqCnmtEPtZmW",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day10.txt": {
+      "modified_at_ns": 1775299715850742185,
+      "openai_file_id": "file-HnWZyknhGP98VeWbeR67v5",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day10.txt",
+      "size": 92799,
+      "status": "completed",
+      "vector_store_file_id": "file-HnWZyknhGP98VeWbeR67v5",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day2.txt": {
+      "modified_at_ns": 1775299715852145850,
+      "openai_file_id": "file-57nvw2a5Gup3stRCJ9H2TH",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day2.txt",
+      "size": 70216,
+      "status": "completed",
+      "vector_store_file_id": "file-57nvw2a5Gup3stRCJ9H2TH",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day3.txt": {
+      "modified_at_ns": 1775299715853321682,
+      "openai_file_id": "file-YZ7pWxk5xWpCeAfsdfEr4A",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day3.txt",
+      "size": 61502,
+      "status": "completed",
+      "vector_store_file_id": "file-YZ7pWxk5xWpCeAfsdfEr4A",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day4.txt": {
+      "modified_at_ns": 1775299715854236098,
+      "openai_file_id": "file-DMn7befJpzgcdPhfBVyQVP",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day4.txt",
+      "size": 63949,
+      "status": "completed",
+      "vector_store_file_id": "file-DMn7befJpzgcdPhfBVyQVP",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day5.txt": {
+      "modified_at_ns": 1775299715855106347,
+      "openai_file_id": "file-KvgPkkQouqJTowbCqWyiq2",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day5.txt",
+      "size": 66970,
+      "status": "completed",
+      "vector_store_file_id": "file-KvgPkkQouqJTowbCqWyiq2",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day6.txt": {
+      "modified_at_ns": 1775299715855889722,
+      "openai_file_id": "file-UvvafSt69HnLneARpb75vX",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day6.txt",
+      "size": 65537,
+      "status": "completed",
+      "vector_store_file_id": "file-UvvafSt69HnLneARpb75vX",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day7.txt": {
+      "modified_at_ns": 1775299715856754554,
+      "openai_file_id": "file-NMtzPECEiJitmfgUDG9bsU",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day7.txt",
+      "size": 75686,
+      "status": "completed",
+      "vector_store_file_id": "file-NMtzPECEiJitmfgUDG9bsU",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day8.txt": {
+      "modified_at_ns": 1775299715857246012,
+      "openai_file_id": "file-8KkZFje34RBTckf9FLQJiv",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day8.txt",
+      "size": 63965,
+      "status": "completed",
+      "vector_store_file_id": "file-8KkZFje34RBTckf9FLQJiv",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day9.txt": {
+      "modified_at_ns": 1775299715858175386,
+      "openai_file_id": "file-316ukFLV8eC73Jb5H7wmq7",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2022raw_day9.txt",
+      "size": 83215,
+      "status": "completed",
+      "vector_store_file_id": "file-316ukFLV8eC73Jb5H7wmq7",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day1.txt": {
+      "modified_at_ns": 1775299715859024843,
+      "openai_file_id": "file-JS7xioL31KB1dJUPaVerCD",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day1.txt",
+      "size": 77563,
+      "status": "completed",
+      "vector_store_file_id": "file-JS7xioL31KB1dJUPaVerCD",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day2.txt": {
+      "modified_at_ns": 1775299715859582051,
+      "openai_file_id": "file-PEj8V1fLTsZuZbp2QvN89W",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day2.txt",
+      "size": 63413,
+      "status": "completed",
+      "vector_store_file_id": "file-PEj8V1fLTsZuZbp2QvN89W",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day3.txt": {
+      "modified_at_ns": 1775299715860547550,
+      "openai_file_id": "file-S4Js3Hg28KqL7oqVBFW6d7",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day3.txt",
+      "size": 75167,
+      "status": "completed",
+      "vector_store_file_id": "file-S4Js3Hg28KqL7oqVBFW6d7",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day4.txt": {
+      "modified_at_ns": 1775299715861374466,
+      "openai_file_id": "file-Bb4mpRx7abJpyE5SPezf8A",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day4.txt",
+      "size": 78120,
+      "status": "completed",
+      "vector_store_file_id": "file-Bb4mpRx7abJpyE5SPezf8A",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day5.txt": {
+      "modified_at_ns": 1775299715861901757,
+      "openai_file_id": "file-192uf2CLkBPfKfqo2VXRkx",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day5.txt",
+      "size": 69095,
+      "status": "completed",
+      "vector_store_file_id": "file-192uf2CLkBPfKfqo2VXRkx",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day6.txt": {
+      "modified_at_ns": 1775299715862781673,
+      "openai_file_id": "file-3ncCiM8jfonYQ3SRYgoagE",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day6.txt",
+      "size": 46885,
+      "status": "completed",
+      "vector_store_file_id": "file-3ncCiM8jfonYQ3SRYgoagE",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day7.txt": {
+      "modified_at_ns": 1775299715863607214,
+      "openai_file_id": "file-LcAiNnvWapgLvVh2qdp51S",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day7.txt",
+      "size": 63144,
+      "status": "completed",
+      "vector_store_file_id": "file-LcAiNnvWapgLvVh2qdp51S",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day8.txt": {
+      "modified_at_ns": 1775299715864693296,
+      "openai_file_id": "file-FmWW54qxzktc8KFv83w6Z6",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day8.txt",
+      "size": 79932,
+      "status": "completed",
+      "vector_store_file_id": "file-FmWW54qxzktc8KFv83w6Z6",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day9.txt": {
+      "modified_at_ns": 1775299715865650420,
+      "openai_file_id": "file-1LirUK1ynGpXk2guMnXysp",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2023raw_day9.txt",
+      "size": 76517,
+      "status": "completed",
+      "vector_store_file_id": "file-1LirUK1ynGpXk2guMnXysp",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day1.txt": {
+      "modified_at_ns": 1775299715866812585,
+      "openai_file_id": "file-68dWAtzFvnayKeJX7HpCFt",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day1.txt",
+      "size": 76717,
+      "status": "completed",
+      "vector_store_file_id": "file-68dWAtzFvnayKeJX7HpCFt",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day2.txt": {
+      "modified_at_ns": 1775299715867587293,
+      "openai_file_id": "file-8wWycfFBCqbEHusRfVVJSs",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day2.txt",
+      "size": 61814,
+      "status": "completed",
+      "vector_store_file_id": "file-8wWycfFBCqbEHusRfVVJSs",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day3.txt": {
+      "modified_at_ns": 1775299715869176291,
+      "openai_file_id": "file-D37vBuAWCohcSzufSLc3R3",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day3.txt",
+      "size": 70096,
+      "status": "completed",
+      "vector_store_file_id": "file-D37vBuAWCohcSzufSLc3R3",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day4.txt": {
+      "modified_at_ns": 1775299715870002290,
+      "openai_file_id": "file-45MppTR76GfSfbV7yZGLeX",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day4.txt",
+      "size": 58180,
+      "status": "completed",
+      "vector_store_file_id": "file-45MppTR76GfSfbV7yZGLeX",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day5.txt": {
+      "modified_at_ns": 1775299715871290247,
+      "openai_file_id": "file-AqVNkav4vHdqNu2d7zCbPT",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day5.txt",
+      "size": 70628,
+      "status": "completed",
+      "vector_store_file_id": "file-AqVNkav4vHdqNu2d7zCbPT",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day6.txt": {
+      "modified_at_ns": 1775299715872412413,
+      "openai_file_id": "file-4BRq7do3uzmtrUm1iPjmQd",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day6.txt",
+      "size": 61492,
+      "status": "completed",
+      "vector_store_file_id": "file-4BRq7do3uzmtrUm1iPjmQd",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day7.txt": {
+      "modified_at_ns": 1775299715872759371,
+      "openai_file_id": "file-Rp4nGF6dNHf5N2D44Yv29o",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day7.txt",
+      "size": 67410,
+      "status": "completed",
+      "vector_store_file_id": "file-Rp4nGF6dNHf5N2D44Yv29o",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    },
+    "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day8.txt": {
+      "modified_at_ns": 1775299715873537703,
+      "openai_file_id": "file-X3f2Ty26jWSFkMWAgxi2MS",
+      "path": "/Users/jorrytdejong/Documents/Prototyping/Chatkit Openai/ARUN data/juicing_YT_raw_transcripts/juicing2025raw_day8.txt",
+      "size": 65498,
+      "status": "completed",
+      "vector_store_file_id": "file-X3f2Ty26jWSFkMWAgxi2MS",
+      "vector_store_id": "vs_69d1017f793081918babede03776ef64"
+    }
+  },
+  "vector_store_id": "vs_69d1017f793081918babede03776ef64",
+  "version": 1
+}
