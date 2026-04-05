@@ -94,7 +94,7 @@ export function ChatKitPanel() {
   });
 
   return (
-    <div className="relative flex h-[90vh] w-full min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-colors dark:bg-slate-900">
+    <div className="relative flex h-[90vh] w-full flex-col overflow-hidden rounded-2xl bg-white pb-8 shadow-sm transition-colors dark:bg-slate-900">
       {isReady ? (
         <ChatKit control={chatkit.control} className="block h-full w-full" />
       ) : null}
