@@ -14,7 +14,7 @@ export function ChatKitPanel() {
       fetch: authorizedFetch,
     },
     startScreen: {
-      greeting: "Welcome to your Meditative Juice Coach 🍇🧘",
+      greeting: "Welcome to ARUN Meditative Juice Coach 🍇🧘",
     },
     composer: {
       // File uploads stay off in v1 because retrieval uses a pre-indexed ARUN corpus.
