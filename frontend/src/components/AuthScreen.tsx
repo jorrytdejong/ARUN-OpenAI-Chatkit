@@ -5,6 +5,8 @@ type AuthScreenProps = {
   title: string;
   description: string;
   children?: ReactNode;
+  variant?: "default" | "minimal";
+  backgroundImageUrl?: string;
 };
 
 export function AuthScreen({
@@ -12,7 +14,74 @@ export function AuthScreen({
   title,
   description,
   children,
+  variant = "default",
+  backgroundImageUrl,
 }: AuthScreenProps) {
+  if (variant === "minimal") {
+    const hasBackgroundImage = typeof backgroundImageUrl === "string";
+
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center bg-slate-100 px-6 py-10 text-slate-950 dark:bg-slate-950 dark:text-slate-50">
+        <div className="mx-auto w-full max-w-5xl">
+          <section
+            className={`relative overflow-hidden rounded-2xl shadow-sm transition-colors ${
+              hasBackgroundImage
+                ? "bg-slate-200 dark:bg-slate-900"
+                : "bg-white dark:bg-slate-900"
+            }`}
+          >
+            {hasBackgroundImage ? (
+              <>
+                <div
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url("${backgroundImageUrl}")` }}
+                />
+                <div className="absolute inset-0 bg-slate-950/48" />
+              </>
+            ) : null}
+
+            <div
+              className={`relative ${
+                hasBackgroundImage
+                  ? "flex min-h-[78vh] items-center justify-center p-6 sm:p-10"
+                  : "p-8 sm:p-10"
+              }`}
+            >
+              <div
+                className={`mx-auto flex w-full max-w-xl flex-col gap-8 ${
+                  hasBackgroundImage
+                    ? "rounded-2xl bg-white/92 p-8 shadow-sm backdrop-blur-sm dark:bg-slate-900/90"
+                    : ""
+                }`}
+              >
+                <div className="space-y-4">
+                  <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                    ARUN Meditative Juice Coach
+                  </span>
+                  <div className="space-y-3">
+                    {eyebrow ? (
+                      <p className="text-sm font-medium tracking-[0.16em] text-slate-500 uppercase dark:text-slate-400">
+                        {eyebrow}
+                      </p>
+                    ) : null}
+                    <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                      {title}
+                    </h1>
+                    <p className="text-base leading-7 text-slate-600 dark:text-slate-300">
+                      {description}
+                    </p>
+                  </div>
+                </div>
+
+                {children ? <div className="space-y-4">{children}</div> : null}
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(255,237,213,0.95),_rgba(255,255,255,1)_38%,_rgba(224,242,254,0.9)_100%)] text-slate-950 dark:bg-[radial-gradient(circle_at_top,_rgba(67,20,7,0.9),_rgba(2,6,23,1)_42%,_rgba(12,74,110,0.72)_100%)] dark:text-slate-50">
       <div className="absolute inset-0 overflow-hidden">

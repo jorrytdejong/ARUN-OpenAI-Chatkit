@@ -30,6 +30,8 @@ export function LoginPage() {
         eyebrow="Preparing sign-in"
         title="Loading your secure entry"
         description="One moment while we get the login flow ready."
+        backgroundImageUrl="/login-fruit-background.jpg"
+        variant="minimal"
       />
     );
   }
@@ -40,9 +42,11 @@ export function LoginPage() {
 
   return (
     <AuthScreen
-      eyebrow="Protected access"
-      title="Sign in before entering the chat"
-      description="Use your Auth0 account to unlock the Meditative Juice Coach. Once you're in, the chat page stays exactly as it is."
+      eyebrow=""
+      title="Welcome to ARUN Meditative Juice Coach"
+      description="Log in or subscribe to enter the chat."
+      backgroundImageUrl="/login-fruit-background.jpg"
+      variant="minimal"
     >
       {error ? (
         <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm leading-6 text-rose-700 dark:border-rose-400/30 dark:bg-rose-950/40 dark:text-rose-100">
@@ -57,7 +61,7 @@ export function LoginPage() {
         }}
         className="inline-flex w-full items-center justify-center rounded-2xl bg-slate-950 px-5 py-4 text-base font-semibold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 dark:focus:ring-slate-500 dark:focus:ring-offset-slate-950"
       >
-        Continue with Auth0
+        Log in or subscribe
       </button>
     </AuthScreen>
   );
@@ -69,6 +73,7 @@ export function Auth0SetupPage() {
       eyebrow="Setup required"
       title="Auth0 is not configured yet"
       description="Add your Auth0 SPA settings before this app can open the login flow."
+      variant="minimal"
     >
       <div className="space-y-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-7 text-amber-900 dark:border-amber-400/30 dark:bg-amber-950/40 dark:text-amber-100">
         <p>
