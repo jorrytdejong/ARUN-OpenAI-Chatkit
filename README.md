@@ -21,12 +21,42 @@ What happens:
 - `OPENAI_VECTOR_STORE_ID` (backend, required after syncing the ARUN corpus)
 - `ARUN_KB_ROOT` (optional, defaults to the local `ARUN data` folder)
 - `ARUN_KB_MANIFEST_PATH` (optional, defaults to `backend/.arun_kb_manifest.json`)
+- `DATABASE_URL` (backend persistence for chat threads and entitlements)
+- `APP_BASE_URL` (frontend origin used by Stripe return URLs)
+- `CORS_ALLOWED_ORIGINS` (comma-separated allowlist for frontend origins)
 - `VITE_CHATKIT_API_URL` (optional, defaults to `/chatkit`)
 - `VITE_CHATKIT_API_DOMAIN_KEY` (optional, defaults to `domain_pk_localhost_dev`)
+- `VITE_AUTH0_DOMAIN` (frontend/runtime, required for login gating)
+- `VITE_AUTH0_CLIENT_ID` (frontend/runtime, required for login gating)
+- `VITE_AUTH0_AUDIENCE` (frontend/runtime, required for API access tokens)
+- `STRIPE_SECRET_KEY` (backend billing)
+- `STRIPE_WEBHOOK_SECRET` (backend Stripe webhook verification)
+- `STRIPE_PRICE_ID` (monthly subscription price for chat access)
 
-Set `OPENAI_API_KEY` in your shell or in `.env.local` at the repo root before
+Set `OPENAI_API_KEY` in your shell or in `.env` at the repo root before
 running the backend. Register a production domain key in the OpenAI dashboard
 and set `VITE_CHATKIT_API_DOMAIN_KEY` when deploying.
+
+For Auth0, configure the SPA application with these URLs:
+
+- Allowed Callback URLs: `http://localhost:3000/login`, `https://radiant-temple-54042-2a42452b8f5b.herokuapp.com/login`
+- Allowed Logout URLs: `http://localhost:3000/login`, `https://radiant-temple-54042-2a42452b8f5b.herokuapp.com/login`
+- Allowed Web Origins: `http://localhost:3000`, `https://radiant-temple-54042-2a42452b8f5b.herokuapp.com`
+- API Identifier / Audience: match `VITE_AUTH0_AUDIENCE`
+
+For Stripe production billing:
+
+- Create one recurring monthly Price and set its id in `STRIPE_PRICE_ID`
+- Point the Stripe webhook endpoint at `/api/stripe/webhook`
+- Subscribe the webhook to:
+  - `checkout.session.completed`
+  - `customer.subscription.created`
+  - `customer.subscription.updated`
+  - `customer.subscription.deleted`
+- Add Heroku Postgres and set `DATABASE_URL`
+- Set `APP_BASE_URL` to your deployed frontend origin
+
+Heroku should run migrations automatically through the `release` process in the root `Procfile`.
 
 ## ARUN knowledge-base sync
 
@@ -58,7 +88,7 @@ sync-arun-kb
 ```
 
 If the sync command creates a new vector store, it prints the resulting
-`OPENAI_VECTOR_STORE_ID`. Add that value to your `.env.local` before starting
+`OPENAI_VECTOR_STORE_ID`. Add that value to your `.env` before starting
 the backend for normal use.
 
 ## Customize

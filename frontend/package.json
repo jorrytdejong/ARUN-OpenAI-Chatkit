@@ -14,9 +14,11 @@
     "npm": ">=9"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.16.1",
     "@openai/chatkit-react": ">=1.1.1 <2.0.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.14.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

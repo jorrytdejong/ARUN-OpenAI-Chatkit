@@ -8,11 +8,11 @@ from typing import Any, AsyncIterator
 from agents import Agent, FileSearchTool, Runner
 from chatkit.agents import AgentContext, simple_to_agent_input, stream_agent_response
 from chatkit.server import ChatKitServer
+from chatkit.store import Store
 from chatkit.types import ThreadItem, ThreadMetadata, ThreadStreamEvent, UserMessageItem
 from pydantic import BaseModel, Field
 
 from .arun_kb import ArunKBConfig
-from .memory_store import MemoryStore
 
 
 MAX_RECENT_ITEMS = 30
@@ -103,10 +103,10 @@ def build_suggestion_agent() -> Agent[None]:
 
 
 class StarterChatServer(ChatKitServer[dict[str, Any]]):
-    """Server implementation that keeps conversation state in memory."""
+    """Server implementation backed by a pluggable ChatKit store."""
 
-    def __init__(self) -> None:
-        self.store: MemoryStore = MemoryStore()
+    def __init__(self, store: Store[dict[str, Any]]) -> None:
+        self.store = store
         self.assistant_agent = build_assistant_agent()
         self.suggestion_agent = build_suggestion_agent()
         super().__init__(self.store)

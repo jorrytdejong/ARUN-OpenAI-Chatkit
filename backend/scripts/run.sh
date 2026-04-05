@@ -35,19 +35,21 @@ else
   pip install -e . >/dev/null
 fi
 
-# Load env vars from the repo's .env.local (if present) so OPENAI_API_KEY
-# does not need to be exported manually.
-ENV_FILE="$PROJECT_ROOT/../.env.local"
-if [ -z "${OPENAI_API_KEY:-}" ] && [ -f "$ENV_FILE" ]; then
-  echo "Sourcing OPENAI_API_KEY from $ENV_FILE"
-  # shellcheck disable=SC1090
-  set -a
-  . "$ENV_FILE"
-  set +a
-fi
+load_env_file() {
+  local env_file="$1"
+  if [ -f "$env_file" ]; then
+    echo "Sourcing environment from $env_file"
+    # shellcheck disable=SC1090
+    set -a
+    . "$env_file"
+    set +a
+  fi
+}
+
+load_env_file "$PROJECT_ROOT/../.env"
 
 if [ -z "${OPENAI_API_KEY:-}" ]; then
-  echo "Set OPENAI_API_KEY in your environment or in .env.local before running this script."
+  echo "Set OPENAI_API_KEY in your environment or .env before running this script."
   exit 1
 fi
 

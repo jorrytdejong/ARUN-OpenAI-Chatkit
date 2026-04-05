@@ -3,10 +3,16 @@ import {
   CHATKIT_API_DOMAIN_KEY,
   CHATKIT_API_URL,
 } from "../lib/config";
+import { useAccess } from "../auth/access-context";
 
 export function ChatKitPanel() {
+  const { authorizedFetch } = useAccess();
   const chatkit = useChatKit({
-    api: { url: CHATKIT_API_URL, domainKey: CHATKIT_API_DOMAIN_KEY },
+    api: {
+      url: CHATKIT_API_URL,
+      domainKey: CHATKIT_API_DOMAIN_KEY,
+      fetch: authorizedFetch,
+    },
     startScreen: {
       greeting: "Welcome to your Meditative Juice Coach 🍇🧘",
     },

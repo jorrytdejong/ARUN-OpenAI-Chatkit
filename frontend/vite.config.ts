@@ -12,7 +12,15 @@ export default defineConfig({
     port: 3000,
     host: "0.0.0.0",
     proxy: {
+      "/api": {
+        target: backendTarget,
+        changeOrigin: true,
+      },
       "/chatkit": {
+        target: backendTarget,
+        changeOrigin: true,
+      },
+      "/chatkit-config.js": {
         target: backendTarget,
         changeOrigin: true,
       },
