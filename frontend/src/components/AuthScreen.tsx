@@ -14,7 +14,7 @@ export function AuthScreen({
   title,
   description,
   children,
-  variant = "default",
+  variant = "minimal",
   backgroundImageUrl,
 }: AuthScreenProps) {
   if (variant === "minimal") {
@@ -97,9 +97,11 @@ export function AuthScreen({
               ARUN Juice Guide
             </span>
             <div className="space-y-4">
-              <p className="text-sm font-semibold tracking-[0.24em] text-slate-500 uppercase dark:text-slate-300">
-                {eyebrow}
-              </p>
+              {eyebrow ? (
+                <p className="text-sm font-semibold tracking-[0.24em] text-slate-500 uppercase dark:text-slate-300">
+                  {eyebrow}
+                </p>
+              ) : null}
               <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
                 {title}
               </h1>

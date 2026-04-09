@@ -17,6 +17,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         eyebrow="Checking access"
         title="Confirming your session"
         description="One moment while we verify your access to the coach."
+        variant="minimal"
       />
     );
   }

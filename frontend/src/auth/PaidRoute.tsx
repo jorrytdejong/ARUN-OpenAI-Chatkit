@@ -16,6 +16,7 @@ export function PaidRoute({ children }: PaidRouteProps) {
         eyebrow="Checking plan"
         title="Confirming your subscription"
         description="One moment while we verify your access to the coach."
+        variant="minimal"
       />
     );
   }
@@ -26,6 +27,7 @@ export function PaidRoute({ children }: PaidRouteProps) {
         eyebrow="Access check failed"
         title="We couldn't confirm your subscription"
         description={error}
+        variant="minimal"
       />
     );
   }

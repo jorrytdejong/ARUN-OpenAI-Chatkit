@@ -68,6 +68,7 @@ export function SubscribePage() {
         eyebrow="Loading plan"
         title="Checking your billing access"
         description="One moment while we fetch your subscription status."
+        variant="minimal"
       />
     );
   }
@@ -78,6 +79,7 @@ export function SubscribePage() {
         eyebrow="Access unavailable"
         title="We couldn't load your billing status"
         description={error}
+        variant="minimal"
       />
     );
   }
@@ -145,6 +147,7 @@ export function SubscribePage() {
       eyebrow="Subscription required"
       title="Choose a plan before entering the coach"
       description={detailText}
+      variant="minimal"
     >
       <div className="space-y-4">
         {searchParams.get("checkout") === "success" ? (
