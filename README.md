@@ -39,9 +39,9 @@ and set `VITE_CHATKIT_API_DOMAIN_KEY` when deploying.
 
 For Auth0, configure the SPA application with these URLs:
 
-- Allowed Callback URLs: `http://localhost:3000/login`, `https://radiant-temple-54042-2a42452b8f5b.herokuapp.com/login`
-- Allowed Logout URLs: `http://localhost:3000/login`, `https://radiant-temple-54042-2a42452b8f5b.herokuapp.com/login`
-- Allowed Web Origins: `http://localhost:3000`, `https://radiant-temple-54042-2a42452b8f5b.herokuapp.com`
+- Allowed Callback URLs: `http://localhost:3000/login`, `https://<your-frontend-domain>/login`
+- Allowed Logout URLs: `http://localhost:3000/login`, `https://<your-frontend-domain>/login`
+- Allowed Web Origins: `http://localhost:3000`, `https://<your-frontend-domain>`
 - API Identifier / Audience: match `VITE_AUTH0_AUDIENCE`
 
 For Stripe production billing:
@@ -53,10 +53,10 @@ For Stripe production billing:
   - `customer.subscription.created`
   - `customer.subscription.updated`
   - `customer.subscription.deleted`
-- Add Heroku Postgres and set `DATABASE_URL`
+- Add Postgres and set `DATABASE_URL`
 - Set `APP_BASE_URL` to your deployed frontend origin
 
-Heroku should run migrations automatically through the `release` process in the root `Procfile`.
+Run database migrations as part of your deploy/release process.
 
 ## ARUN knowledge-base sync
 
