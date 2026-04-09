@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./auth/ProtectedRoute";
 import { Auth0SetupPage, LoginPage } from "./components/LoginPage";
 import { ChatKitPanel } from "./components/ChatKitPanel";
 import { SubscribePage } from "./components/SubscribePage";
+import { SubscriptionPage } from "./components/SubscriptionPage";
 import { AUTH0_IS_CONFIGURED } from "./lib/config";
 
 function ChatPage() {
@@ -27,6 +28,14 @@ function AuthenticatedRoutes() {
         element={
           <ProtectedRoute>
             <SubscribePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/subscription"
+        element={
+          <ProtectedRoute>
+            <SubscriptionPage />
           </ProtectedRoute>
         }
       />

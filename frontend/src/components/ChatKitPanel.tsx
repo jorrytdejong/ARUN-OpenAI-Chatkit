@@ -1,4 +1,5 @@
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
+import { useNavigate } from "react-router-dom";
 import {
   CHATKIT_API_DOMAIN_KEY,
   CHATKIT_API_URL,
@@ -6,12 +7,33 @@ import {
 import { useAccess } from "../auth/access-context";
 
 export function ChatKitPanel() {
+  const navigate = useNavigate();
   const { authorizedFetch } = useAccess();
   const chatkit = useChatKit({
     api: {
       url: CHATKIT_API_URL,
       domainKey: CHATKIT_API_DOMAIN_KEY,
       fetch: authorizedFetch,
+    },
+    history: {
+      enabled: true,
+      showDelete: true,
+      showRename: true,
+    },
+    header: {
+      enabled: true,
+      leftAction: {
+        icon: "compose",
+        onClick: () => {
+          void chatkit.setThreadId(null);
+        },
+      },
+      rightAction: {
+        icon: "settings-cog",
+        onClick: () => {
+          void navigate("/subscription");
+        },
+      },
     },
     startScreen: {
       greeting: "Welcome to ARUN Meditative Juice Coach 🍇🧘",

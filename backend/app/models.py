@@ -33,8 +33,21 @@ class CustomerAccess(Base):
         String(64),
         nullable=True,
     )
+    cancel_at_period_end: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+    )
     has_access: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     current_period_end: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+    cancellation_requested_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+    ended_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         nullable=True,
     )

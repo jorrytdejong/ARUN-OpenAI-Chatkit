@@ -21,14 +21,49 @@ class BillingUrlResponse(BaseModel):
     url: str
 
 
+class CancelAtPeriodEndResult(BaseModel):
+    stripe_subscription_id: str
+    stripe_subscription_status: str | None = None
+    cancel_at_period_end: bool
+    current_period_end: datetime | None = None
+    cancellation_requested_at: datetime | None = None
+
+
 def _optional_str(value: Any) -> str | None:
     return value if isinstance(value, str) and value else None
 
 
-def _coerce_period_end(value: int | None) -> datetime | None:
+def _safe_field(obj: Any, key: str) -> Any:
+    if isinstance(obj, dict):
+        return obj.get(key)
+    try:
+        return getattr(obj, key)
+    except AttributeError:
+        return None
+
+
+def _coerce_timestamp(value: Any) -> datetime | None:
     if value is None:
         return None
-    return datetime.fromtimestamp(value, tz=timezone.utc)
+    if isinstance(value, datetime):
+        if value.tzinfo is None:
+            return value.replace(tzinfo=timezone.utc)
+        return value.astimezone(timezone.utc)
+    if isinstance(value, (int, float)):
+        return datetime.fromtimestamp(value, tz=timezone.utc)
+    if isinstance(value, str):
+        raw = value.strip()
+        if not raw:
+            return None
+        if raw.isdigit():
+            return datetime.fromtimestamp(int(raw), tz=timezone.utc)
+        try:
+            return datetime.fromisoformat(raw.replace("Z", "+00:00")).astimezone(
+                timezone.utc
+            )
+        except ValueError:
+            return None
+    return None
 
 
 def _subscription_price_id(subscription: dict[str, Any]) -> str | None:
@@ -84,6 +119,54 @@ class BillingService:
             return_url=f"{self._settings.app_base_url}/subscribe?portal=return",
         )
         return session.url
+
+    def cancel_subscription_at_period_end(
+        self,
+        *,
+        stripe_subscription_id: str,
+    ) -> CancelAtPeriodEndResult:
+        self._configure_stripe()
+        subscription = stripe.Subscription.modify(
+            stripe_subscription_id,
+            cancel_at_period_end=True,
+        )
+        current_period_end = _coerce_timestamp(_safe_field(subscription, "current_period_end"))
+        cancellation_requested_at = _coerce_timestamp(_safe_field(subscription, "canceled_at"))
+        stripe_subscription_status = _optional_str(_safe_field(subscription, "status"))
+        cancel_at_period_end_value = _safe_field(subscription, "cancel_at_period_end")
+
+        if current_period_end is None:
+            refreshed_subscription = stripe.Subscription.retrieve(stripe_subscription_id)
+            current_period_end = _coerce_timestamp(
+                _safe_field(refreshed_subscription, "current_period_end")
+            )
+            if cancellation_requested_at is None:
+                cancellation_requested_at = _coerce_timestamp(
+                    _safe_field(refreshed_subscription, "canceled_at")
+                )
+            if stripe_subscription_status is None:
+                stripe_subscription_status = _optional_str(
+                    _safe_field(refreshed_subscription, "status")
+                )
+            if cancel_at_period_end_value is None:
+                cancel_at_period_end_value = _safe_field(
+                    refreshed_subscription,
+                    "cancel_at_period_end",
+                )
+
+        return CancelAtPeriodEndResult(
+            stripe_subscription_id=(
+                _optional_str(_safe_field(subscription, "id")) or stripe_subscription_id
+            ),
+            stripe_subscription_status=stripe_subscription_status,
+            cancel_at_period_end=(
+                bool(cancel_at_period_end_value)
+                if cancel_at_period_end_value is not None
+                else True
+            ),
+            current_period_end=current_period_end,
+            cancellation_requested_at=cancellation_requested_at,
+        )
 
     def construct_event(self, payload: bytes, signature: str | None) -> dict[str, Any]:
         if not self._settings.stripe_webhook_secret:
@@ -147,7 +230,10 @@ async def process_stripe_event(
             stripe_subscription_id=_optional_str(data.get("id")),
             stripe_price_id=_subscription_price_id(data),
             stripe_subscription_status=status if isinstance(status, str) else None,
-            current_period_end=_coerce_period_end(data.get("current_period_end")),
+            cancel_at_period_end=bool(data.get("cancel_at_period_end")),
+            current_period_end=_coerce_timestamp(data.get("current_period_end")),
+            cancellation_requested_at=_coerce_timestamp(data.get("canceled_at")),
+            ended_at=_coerce_timestamp(data.get("ended_at")),
         )
         return True
 

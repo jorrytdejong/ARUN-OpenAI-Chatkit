@@ -19,6 +19,8 @@ def test_subscription_webhook_updates_and_revokes_access(app, client) -> None:
                 "id": "sub_123",
                 "customer": "cus_123",
                 "status": "active",
+                "cancel_at_period_end": True,
+                "canceled_at": 1890864000,
                 "current_period_end": 1893456000,
                 "metadata": {"auth0_user_id": "auth0|user_123"},
                 "items": {
@@ -50,6 +52,8 @@ def test_subscription_webhook_updates_and_revokes_access(app, client) -> None:
     access_response = client.get("/api/me/access", headers=auth_headers())
     assert access_response.status_code == 200
     assert access_response.json()["has_access"] is True
+    assert access_response.json()["cancel_at_period_end"] is True
+    assert access_response.json()["cancellation_requested_at"] == "2029-12-02T00:00:00"
 
     delete_event = {
         "id": "evt_sub_deleted",
@@ -59,6 +63,9 @@ def test_subscription_webhook_updates_and_revokes_access(app, client) -> None:
                 "id": "sub_123",
                 "customer": "cus_123",
                 "status": "canceled",
+                "cancel_at_period_end": True,
+                "canceled_at": 1890864000,
+                "ended_at": 1893456000,
                 "current_period_end": 1893456000,
                 "metadata": {"auth0_user_id": "auth0|user_123"},
                 "items": {
@@ -82,6 +89,7 @@ def test_subscription_webhook_updates_and_revokes_access(app, client) -> None:
     assert delete_response.status_code == 200
     revoked_response = client.get("/api/me/access", headers=auth_headers())
     assert revoked_response.json()["has_access"] is False
+    assert revoked_response.json()["ended_at"] == "2030-01-01T00:00:00"
 
 
 def test_invalid_webhook_signature_is_rejected(app, client) -> None:

@@ -25,7 +25,10 @@ class AccessSnapshot(BaseModel):
     stripe_subscription_id: str | None = None
     stripe_price_id: str | None = None
     stripe_subscription_status: str | None = None
+    cancel_at_period_end: bool = False
     current_period_end: datetime | None = None
+    cancellation_requested_at: datetime | None = None
+    ended_at: datetime | None = None
     can_manage_billing: bool = False
 
 
@@ -59,7 +62,10 @@ def build_access_snapshot(
         stripe_subscription_id=record.stripe_subscription_id,
         stripe_price_id=record.stripe_price_id,
         stripe_subscription_status=record.stripe_subscription_status,
+        cancel_at_period_end=record.cancel_at_period_end,
         current_period_end=record.current_period_end,
+        cancellation_requested_at=record.cancellation_requested_at,
+        ended_at=record.ended_at,
         can_manage_billing=record.stripe_customer_id is not None,
     )
 
@@ -110,7 +116,10 @@ async def upsert_customer_access(
     stripe_subscription_id: str | None = None,
     stripe_price_id: str | None = None,
     stripe_subscription_status: str | None = None,
+    cancel_at_period_end: bool | None = None,
     current_period_end: datetime | None = None,
+    cancellation_requested_at: datetime | None = None,
+    ended_at: datetime | None = None,
 ) -> CustomerAccess | None:
     record = await find_customer_access(
         session,
@@ -136,8 +145,16 @@ async def upsert_customer_access(
     if stripe_subscription_status is not None:
         record.stripe_subscription_status = stripe_subscription_status
         record.has_access = subscription_has_access(stripe_subscription_status)
+    if cancel_at_period_end is not None:
+        record.cancel_at_period_end = cancel_at_period_end
     if current_period_end is not None or stripe_subscription_status == "canceled":
         record.current_period_end = coerce_utc_datetime(current_period_end)
+    if cancellation_requested_at is not None:
+        record.cancellation_requested_at = coerce_utc_datetime(cancellation_requested_at)
+    if ended_at is not None:
+        record.ended_at = coerce_utc_datetime(ended_at)
+    if stripe_subscription_status == "canceled" and record.ended_at is None:
+        record.ended_at = datetime.now(timezone.utc)
 
     await session.flush()
     return record

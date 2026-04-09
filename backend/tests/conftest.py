@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -43,6 +44,14 @@ class FakeBillingService:
     def __init__(self) -> None:
         self.checkout_args: tuple[str, str | None] | None = None
         self.portal_customer_id: str | None = None
+        self.cancel_subscription_id: str | None = None
+        self.cancel_response_current_period_end: datetime | None = datetime(
+            2030,
+            1,
+            1,
+            tzinfo=timezone.utc,
+        )
+        self.raise_on_cancel: Exception | None = None
         self.webhook_event: dict[str, object] | None = None
         self.raise_on_construct: Exception | None = None
 
@@ -53,6 +62,18 @@ class FakeBillingService:
     def create_billing_portal_session(self, *, stripe_customer_id: str) -> str:
         self.portal_customer_id = stripe_customer_id
         return "https://billing.stripe.test/session"
+
+    def cancel_subscription_at_period_end(self, *, stripe_subscription_id: str) -> dict[str, object]:
+        if self.raise_on_cancel is not None:
+            raise self.raise_on_cancel
+        self.cancel_subscription_id = stripe_subscription_id
+        return {
+            "stripe_subscription_id": stripe_subscription_id,
+            "stripe_subscription_status": "active",
+            "cancel_at_period_end": True,
+            "current_period_end": self.cancel_response_current_period_end,
+            "cancellation_requested_at": datetime(2029, 12, 1, tzinfo=timezone.utc),
+        }
 
     def construct_event(self, payload: bytes, signature: str | None) -> dict[str, object]:
         del payload
@@ -122,6 +143,8 @@ def seed_access(
     stripe_customer_id: str | None = None,
     stripe_subscription_id: str | None = None,
     stripe_subscription_status: str | None = None,
+    cancel_at_period_end: bool = False,
+    current_period_end: datetime | None = None,
 ) -> None:
     async def _seed() -> None:
         async with app.state.session_factory() as session:
@@ -132,6 +155,8 @@ def seed_access(
                     stripe_subscription_id=stripe_subscription_id,
                     stripe_subscription_status=stripe_subscription_status,
                     stripe_price_id="price_test_123",
+                    cancel_at_period_end=cancel_at_period_end,
+                    current_period_end=current_period_end,
                     has_access=has_access,
                 )
             )

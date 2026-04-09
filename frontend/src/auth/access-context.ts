@@ -7,7 +7,10 @@ export type AccessSnapshot = {
   stripe_subscription_id: string | null;
   stripe_price_id: string | null;
   stripe_subscription_status: string | null;
+  cancel_at_period_end: boolean;
   current_period_end: string | null;
+  cancellation_requested_at: string | null;
+  ended_at: string | null;
   can_manage_billing: boolean;
 };
 

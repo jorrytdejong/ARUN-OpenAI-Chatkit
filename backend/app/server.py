@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timezone
 from typing import Any, AsyncIterator
 
@@ -9,11 +10,27 @@ from agents import Agent, FileSearchTool, Runner
 from chatkit.agents import AgentContext, simple_to_agent_input, stream_agent_response
 from chatkit.server import ChatKitServer
 from chatkit.store import Store
-from chatkit.types import ThreadItem, ThreadMetadata, ThreadStreamEvent, UserMessageItem
+from chatkit.types import (
+    AssistantMessageContent,
+    AssistantMessageContentPartAdded,
+    AssistantMessageContentPartAnnotationAdded,
+    AssistantMessageContentPartDone,
+    AssistantMessageContentPartTextDelta,
+    AssistantMessageItem,
+    ThreadItem,
+    ThreadItemAddedEvent,
+    ThreadItemDoneEvent,
+    ThreadItemUpdatedEvent,
+    ThreadMetadata,
+    ThreadStreamEvent,
+    UserMessageItem,
+)
 from pydantic import BaseModel, Field
 
 from .arun_kb import ArunKBConfig
 
+
+logger = logging.getLogger(__name__)
 
 MAX_RECENT_ITEMS = 30
 MODEL = "gpt-5.4"
@@ -21,6 +38,13 @@ SUGGESTION_MODEL = "gpt-5.4-mini"
 MAX_SUGGESTION_ITEMS = 12
 MAX_SUGGESTION_LINES = 8
 MAX_ITEM_TEXT_LENGTH = 400
+STREAM_FAILURE_MESSAGE = (
+    "I hit a temporary issue while generating that reply. Please try again in a moment."
+)
+PARTIAL_STREAM_FAILURE_SUFFIX = (
+    "\n\nI hit a temporary issue while finishing that answer. Please retry and "
+    "I'll continue from there."
+)
 ARUN_KB_SCOPE_SUMMARY = (
     "The ARUN knowledge base focuses on meditative juice cleanses, cleanse preparation, "
     "juicing guidelines, recipes, breaking the fast, detox routines, self-healing themes, "
@@ -132,15 +156,105 @@ class StarterChatServer(ChatKitServer[dict[str, Any]]):
             store=self.store,
             request_context=context,
         )
+        active_assistant_message: AssistantMessageItem | None = None
+        assistant_message_completed = False
 
-        result = Runner.run_streamed(
-            self.assistant_agent,
-            agent_input,
-            context=agent_context,
+        try:
+            result = Runner.run_streamed(
+                self.assistant_agent,
+                agent_input,
+                context=agent_context,
+            )
+
+            async for event in stream_agent_response(agent_context, result):
+                if isinstance(event, ThreadItemAddedEvent) and isinstance(
+                    event.item, AssistantMessageItem
+                ):
+                    active_assistant_message = event.item.model_copy(deep=True)
+                elif (
+                    isinstance(event, ThreadItemUpdatedEvent)
+                    and active_assistant_message is not None
+                    and event.item_id == active_assistant_message.id
+                    and isinstance(
+                        event.update,
+                        (
+                            AssistantMessageContentPartAdded,
+                            AssistantMessageContentPartTextDelta,
+                            AssistantMessageContentPartAnnotationAdded,
+                            AssistantMessageContentPartDone,
+                        ),
+                    )
+                ):
+                    active_assistant_message = self._apply_assistant_message_update(
+                        active_assistant_message,
+                        event.update,
+                    )
+                elif isinstance(event, ThreadItemDoneEvent) and isinstance(
+                    event.item, AssistantMessageItem
+                ):
+                    assistant_message_completed = True
+                    active_assistant_message = None
+
+                yield event
+        except Exception as exc:
+            request_id = getattr(exc, "request_id", None)
+            logger.exception(
+                "Assistant stream failed for thread %s%s",
+                thread.id,
+                f" (request_id={request_id})" if request_id else "",
+            )
+
+            if assistant_message_completed:
+                return
+
+            fallback_item = self._build_stream_failure_item(
+                agent_context,
+                active_assistant_message,
+            )
+            if active_assistant_message is None:
+                yield ThreadItemAddedEvent(item=fallback_item)
+            yield ThreadItemDoneEvent(item=fallback_item)
+
+    def _build_stream_failure_item(
+        self,
+        agent_context: AgentContext[dict[str, Any]],
+        active_assistant_message: AssistantMessageItem | None,
+    ) -> AssistantMessageItem:
+        if active_assistant_message is None:
+            return AssistantMessageItem(
+                id=agent_context.generate_id("message"),
+                thread_id=agent_context.thread.id,
+                created_at=datetime.now(),
+                content=[
+                    AssistantMessageContent(
+                        text=STREAM_FAILURE_MESSAGE,
+                        annotations=[],
+                    )
+                ],
+            )
+
+        fallback_item = active_assistant_message.model_copy(deep=True)
+        last_text_index = next(
+            (
+                index
+                for index in range(len(fallback_item.content) - 1, -1, -1)
+                if fallback_item.content[index].text.strip()
+            ),
+            None,
         )
 
-        async for event in stream_agent_response(agent_context, result):
-            yield event
+        if last_text_index is None:
+            fallback_item.content = [
+                AssistantMessageContent(text=STREAM_FAILURE_MESSAGE, annotations=[])
+            ]
+            return fallback_item
+
+        last_text = fallback_item.content[last_text_index].text.rstrip()
+        if not last_text.endswith(PARTIAL_STREAM_FAILURE_SUFFIX):
+            fallback_item.content[last_text_index].text = (
+                f"{last_text}{PARTIAL_STREAM_FAILURE_SUFFIX}"
+            )
+        return fallback_item
 
     async def suggest_prompts(
         self, thread_id: str | None, context: dict[str, Any]
