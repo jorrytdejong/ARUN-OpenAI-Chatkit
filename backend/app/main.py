@@ -7,28 +7,12 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import AsyncIterator
 
-import stripe
 from chatkit.server import StreamingResult
-from fastapi import Depends, FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
-from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.concurrency import run_in_threadpool
 
-from .access import (
-    AccessSnapshot,
-    get_access_snapshot_for_user,
-    get_customer_access,
-    require_active_access,
-    upsert_customer_access,
-)
 from .auth import Auth0TokenVerifier, AuthenticatedUser, require_authenticated_user
-from .billing import (
-    BillingService,
-    BillingUrlResponse,
-    CancelAtPeriodEndResult,
-    process_stripe_event,
-)
 from .chat_store import PostgresChatStore
 from .config import Settings, get_settings
 from .database import create_engine_and_session_factory
@@ -46,7 +30,6 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.engine = engine
     app.state.session_factory = session_factory
     app.state.token_verifier = Auth0TokenVerifier(settings)
-    app.state.billing_service = BillingService(settings)
     app.state.chatkit_server = None
 
     try:
@@ -85,160 +68,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         body = f"window.__CHATKIT_CONFIG__ = {json.dumps(config)};"
         return Response(content=body, media_type="application/javascript")
 
-    @app.get("/api/me/access")
-    async def access_snapshot(
-        session: AsyncSession = Depends(get_db_session),
-        user: AuthenticatedUser = Depends(require_authenticated_user),
-    ) -> AccessSnapshot:
-        return await get_access_snapshot_for_user(session, user)
-
-    @app.post("/api/billing/checkout-session")
-    async def checkout_session(
-        session: AsyncSession = Depends(get_db_session),
-        user: AuthenticatedUser = Depends(require_authenticated_user),
-        billing_service: BillingService = Depends(get_billing_service),
-    ) -> BillingUrlResponse:
-        settings = app.state.settings
-        if not settings.stripe_secret_key or not settings.stripe_price_id:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Stripe billing is not configured.",
-            )
-
-        access_record = await get_customer_access(session, user.sub)
-        url = await run_in_threadpool(
-            billing_service.create_checkout_session,
-            user=user,
-            stripe_customer_id=access_record.stripe_customer_id if access_record else None,
-        )
-        return BillingUrlResponse(url=url)
-
-    @app.post("/api/billing/portal-session")
-    async def portal_session(
-        session: AsyncSession = Depends(get_db_session),
-        user: AuthenticatedUser = Depends(require_authenticated_user),
-        billing_service: BillingService = Depends(get_billing_service),
-    ) -> BillingUrlResponse:
-        access_record = await get_customer_access(session, user.sub)
-        if access_record is None or access_record.stripe_customer_id is None:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Billing portal is not available before checkout.",
-            )
-
-        url = await run_in_threadpool(
-            billing_service.create_billing_portal_session,
-            stripe_customer_id=access_record.stripe_customer_id,
-        )
-        return BillingUrlResponse(url=url)
-
-    @app.post("/api/billing/subscriptions/{subscription_id}/cancel-at-period-end")
-    async def cancel_subscription_at_period_end(
-        subscription_id: str,
-        session: AsyncSession = Depends(get_db_session),
-        user: AuthenticatedUser = Depends(require_authenticated_user),
-        billing_service: BillingService = Depends(get_billing_service),
-    ) -> CancelAtPeriodEndResult:
-        settings = app.state.settings
-        if not settings.stripe_secret_key:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Stripe billing is not configured.",
-            )
-
-        access_record = await get_customer_access(session, user.sub)
-        if (
-            access_record is None
-            or access_record.stripe_customer_id is None
-            or access_record.stripe_subscription_id is None
-        ):
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="No active subscription found for this account.",
-            )
-        if access_record.stripe_subscription_id != subscription_id:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Subscription not found for this account.",
-            )
-
-        try:
-            raw_result = await run_in_threadpool(
-                billing_service.cancel_subscription_at_period_end,
-                stripe_subscription_id=subscription_id,
-            )
-            result = (
-                raw_result
-                if isinstance(raw_result, CancelAtPeriodEndResult)
-                else CancelAtPeriodEndResult.model_validate(raw_result)
-            )
-            if result.current_period_end is None and access_record.current_period_end is not None:
-                result = result.model_copy(
-                    update={"current_period_end": access_record.current_period_end}
-                )
-            await upsert_customer_access(
-                session,
-                auth0_user_id=user.sub,
-                stripe_customer_id=access_record.stripe_customer_id,
-                stripe_subscription_id=access_record.stripe_subscription_id,
-                stripe_subscription_status=(
-                    result.stripe_subscription_status
-                    if result.stripe_subscription_status is not None
-                    else access_record.stripe_subscription_status
-                ),
-                cancel_at_period_end=True,
-                current_period_end=result.current_period_end,
-                cancellation_requested_at=result.cancellation_requested_at,
-            )
-            await session.commit()
-            return result
-        except stripe.error.StripeError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=str(exc.user_message or "Unable to end subscription right now."),
-            ) from exc
-        except Exception as exc:
-            raise HTTPException(
-                status_code=status.HTTP_502_BAD_GATEWAY,
-                detail=(
-                    "Unable to schedule end of subscription right now. "
-                    "Please try again in a moment."
-                ),
-            ) from exc
-
-    @app.post("/api/stripe/webhook")
-    async def stripe_webhook(
-        request: Request,
-        session: AsyncSession = Depends(get_db_session),
-        billing_service: BillingService = Depends(get_billing_service),
-    ) -> JSONResponse:
-        payload = await request.body()
-        signature = request.headers.get("stripe-signature")
-
-        try:
-            event = await run_in_threadpool(
-                billing_service.construct_event,
-                payload,
-                signature,
-            )
-        except (ValueError, stripe.error.SignatureVerificationError) as exc:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=str(exc),
-            ) from exc
-
-        await process_stripe_event(session, event)
-        await session.commit()
-        return JSONResponse({"received": True})
-
     @app.post("/chatkit")
     async def chatkit_endpoint(
         request: Request,
-        session: AsyncSession = Depends(get_db_session),
         user: AuthenticatedUser = Depends(require_authenticated_user),
         chatkit_server: StarterChatServer = Depends(get_chatkit_server),
     ) -> Response:
-        await require_active_access(session, user)
         payload = await request.body()
         result = await chatkit_server.process(
             payload,
@@ -254,31 +89,29 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/chatkit/suggestions")
     async def starter_suggestions(
         request: Request,
-        session: AsyncSession = Depends(get_db_session),
         user: AuthenticatedUser = Depends(require_authenticated_user),
         chatkit_server: StarterChatServer = Depends(get_chatkit_server),
     ) -> Response:
-        await require_active_access(session, user)
         suggestions = await chatkit_server.suggest_prompts(
             None,
             {"request": request, "auth_user": user},
         )
-        return JSONResponse(suggestions.model_dump())
+        payload = suggestions.model_dump() if hasattr(suggestions, "model_dump") else suggestions
+        return JSONResponse(payload)
 
     @app.get("/chatkit/threads/{thread_id}/suggestions")
     async def thread_suggestions(
         thread_id: str,
         request: Request,
-        session: AsyncSession = Depends(get_db_session),
         user: AuthenticatedUser = Depends(require_authenticated_user),
         chatkit_server: StarterChatServer = Depends(get_chatkit_server),
     ) -> Response:
-        await require_active_access(session, user)
         suggestions = await chatkit_server.suggest_prompts(
             thread_id,
             {"request": request, "auth_user": user},
         )
-        return JSONResponse(suggestions.model_dump())
+        payload = suggestions.model_dump() if hasattr(suggestions, "model_dump") else suggestions
+        return JSONResponse(payload)
 
     @app.get("/{full_path:path}")
     async def frontend_app(full_path: str) -> Response:
@@ -297,15 +130,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return FileResponse(FRONTEND_INDEX_PATH)
 
     return app
-
-async def get_db_session(request: Request) -> AsyncIterator[AsyncSession]:
-    session_factory = request.app.state.session_factory
-    async with session_factory() as session:
-        yield session
-
-
-def get_billing_service(request: Request) -> BillingService:
-    return request.app.state.billing_service
 
 
 def get_chatkit_server(request: Request) -> StarterChatServer:

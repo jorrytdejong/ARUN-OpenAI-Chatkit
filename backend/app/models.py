@@ -2,78 +2,12 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Index, String, Text
+from sqlalchemy import DateTime, ForeignKey, Index, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .database import Base
-
-
-def utc_now() -> datetime:
-    return datetime.now(timezone.utc)
-
-
-class CustomerAccess(Base):
-    __tablename__ = "customer_access"
-
-    auth0_user_id: Mapped[str] = mapped_column(String(255), primary_key=True)
-    stripe_customer_id: Mapped[str | None] = mapped_column(
-        String(255),
-        unique=True,
-        nullable=True,
-    )
-    stripe_subscription_id: Mapped[str | None] = mapped_column(
-        String(255),
-        unique=True,
-        nullable=True,
-    )
-    stripe_price_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    stripe_subscription_status: Mapped[str | None] = mapped_column(
-        String(64),
-        nullable=True,
-    )
-    cancel_at_period_end: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False,
-        nullable=False,
-    )
-    has_access: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    current_period_end: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-    )
-    cancellation_requested_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-    )
-    ended_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-    )
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=utc_now,
-        nullable=False,
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=utc_now,
-        onupdate=utc_now,
-        nullable=False,
-    )
-
-
-class StripeWebhookEvent(Base):
-    __tablename__ = "stripe_webhook_events"
-
-    stripe_event_id: Mapped[str] = mapped_column(String(255), primary_key=True)
-    event_type: Mapped[str] = mapped_column(String(255), nullable=False)
-    processed_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=utc_now,
-        nullable=False,
-    )
 
 
 class ChatThreadRecord(Base):

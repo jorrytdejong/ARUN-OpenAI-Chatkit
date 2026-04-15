@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import type { ReactNode } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { useEffect, useRef, type ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 import { AuthScreen } from "../components/AuthScreen";
 
 type ProtectedRouteProps = {
@@ -8,8 +8,19 @@ type ProtectedRouteProps = {
 };
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
   const location = useLocation();
+  const hasStartedRedirect = useRef(false);
+
+  useEffect(() => {
+    if (isLoading || isAuthenticated || hasStartedRedirect.current) {
+      return;
+    }
+
+    hasStartedRedirect.current = true;
+    const returnTo = `${location.pathname}${location.search}${location.hash}`;
+    void loginWithRedirect({ appState: { returnTo } });
+  }, [isAuthenticated, isLoading, location, loginWithRedirect]);
 
   if (isLoading) {
     return (
@@ -23,8 +34,14 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   if (!isAuthenticated) {
-    const returnTo = `${location.pathname}${location.search}${location.hash}`;
-    return <Navigate to="/login" replace state={{ returnTo }} />;
+    return (
+      <AuthScreen
+        eyebrow="Redirecting"
+        title="Opening secure sign-in"
+        description="One moment while we send you to the login flow."
+        variant="minimal"
+      />
+    );
   }
 
   return <>{children}</>;

@@ -17,7 +17,6 @@ dependencies = [
     "PyJWT[crypto]>=2.10,<3",
     "psycopg[binary]>=3.2,<4",
     "SQLAlchemy>=2.0.41,<3",
-    "stripe>=12,<13",
 ]
 
 [project.scripts]

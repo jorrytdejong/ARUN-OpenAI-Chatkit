@@ -33,7 +33,7 @@ export function Auth0ProviderWithNavigate({
       clientId={AUTH0_CLIENT_ID}
       authorizationParams={{
         audience: AUTH0_AUDIENCE,
-        redirect_uri: `${window.location.origin}/login`,
+        redirect_uri: `${window.location.origin}/`,
       }}
       onRedirectCallback={handleRedirectCallback}
     >

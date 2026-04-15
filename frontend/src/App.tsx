@@ -1,12 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { AccessProvider } from "./auth/AccessProvider";
 import { Auth0ProviderWithNavigate } from "./auth/Auth0ProviderWithNavigate";
-import { PaidRoute } from "./auth/PaidRoute";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
-import { Auth0SetupPage, LoginPage } from "./components/LoginPage";
+import { Auth0SetupPage } from "./components/LoginPage";
 import { ChatKitPanel } from "./components/ChatKitPanel";
-import { SubscribePage } from "./components/SubscribePage";
-import { SubscriptionPage } from "./components/SubscriptionPage";
 import { AUTH0_IS_CONFIGURED } from "./lib/config";
 
 function ChatPage() {
@@ -22,30 +18,11 @@ function ChatPage() {
 function AuthenticatedRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route
-        path="/subscribe"
-        element={
-          <ProtectedRoute>
-            <SubscribePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/subscription"
-        element={
-          <ProtectedRoute>
-            <SubscriptionPage />
-          </ProtectedRoute>
-        }
-      />
       <Route
         path="/"
         element={
           <ProtectedRoute>
-            <PaidRoute>
-              <ChatPage />
-            </PaidRoute>
+            <ChatPage />
           </ProtectedRoute>
         }
       />
@@ -57,8 +34,8 @@ function AuthenticatedRoutes() {
 function SetupRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<Auth0SetupPage />} />
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<Auth0SetupPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
@@ -70,9 +47,7 @@ export default function App() {
 
   return (
     <Auth0ProviderWithNavigate>
-      <AccessProvider>
-        <AuthenticatedRoutes />
-      </AccessProvider>
+      <AuthenticatedRoutes />
     </Auth0ProviderWithNavigate>
   );
 }

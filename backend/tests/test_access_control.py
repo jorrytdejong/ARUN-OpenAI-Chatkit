@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .conftest import auth_headers, seed_access
+from .conftest import auth_headers
 
 
 def test_chat_endpoint_requires_authentication(client) -> None:
@@ -17,39 +17,20 @@ def test_chat_endpoint_rejects_invalid_token(client) -> None:
     assert response.status_code == 401
 
 
-def test_chat_endpoint_rejects_unpaid_user(client) -> None:
+def test_chat_endpoint_allows_authenticated_user(client) -> None:
     response = client.post("/chatkit", headers=auth_headers(), content=b"{}")
-    assert response.status_code == 403
-
-
-def test_chat_endpoint_allows_paid_user(app, client) -> None:
-    seed_access(
-        app,
-        has_access=True,
-        stripe_customer_id="cus_123",
-        stripe_subscription_id="sub_123",
-        stripe_subscription_status="active",
-    )
-
-    response = client.post("/chatkit", headers=auth_headers(), content=b"{}")
-
     assert response.status_code == 200
     assert response.json() == {"ok": True}
 
 
-def test_access_snapshot_returns_customer_state(app, client) -> None:
-    seed_access(
-        app,
-        has_access=True,
-        stripe_customer_id="cus_123",
-        stripe_subscription_id="sub_123",
-        stripe_subscription_status="active",
-    )
+def test_suggestions_require_authentication(client) -> None:
+    response = client.get("/chatkit/suggestions")
+    assert response.status_code == 401
 
-    response = client.get("/api/me/access", headers=auth_headers())
 
+def test_suggestions_allow_authenticated_user(client) -> None:
+    response = client.get("/chatkit/suggestions", headers=auth_headers())
     assert response.status_code == 200
     payload = response.json()
-    assert payload["auth0_user_id"] == "auth0|user_123"
-    assert payload["has_access"] is True
-    assert payload["can_manage_billing"] is True
+    assert payload["hasHistory"] is False
+    assert payload["suggestions"] == []

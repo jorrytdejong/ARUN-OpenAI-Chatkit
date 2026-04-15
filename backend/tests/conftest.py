@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import asyncio
 import os
-from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -14,8 +12,7 @@ from fastapi.testclient import TestClient
 from app.auth import get_token_verifier
 from app.auth import AuthenticatedUser
 from app.config import Settings
-from app.main import create_app, get_billing_service, get_chatkit_server
-from app.models import CustomerAccess
+from app.main import create_app, get_chatkit_server
 
 
 class StubTokenVerifier:
@@ -40,51 +37,6 @@ class FakeChatServer:
         return {"hasHistory": False, "suggestions": []}
 
 
-class FakeBillingService:
-    def __init__(self) -> None:
-        self.checkout_args: tuple[str, str | None] | None = None
-        self.portal_customer_id: str | None = None
-        self.cancel_subscription_id: str | None = None
-        self.cancel_response_current_period_end: datetime | None = datetime(
-            2030,
-            1,
-            1,
-            tzinfo=timezone.utc,
-        )
-        self.raise_on_cancel: Exception | None = None
-        self.webhook_event: dict[str, object] | None = None
-        self.raise_on_construct: Exception | None = None
-
-    def create_checkout_session(self, *, user: AuthenticatedUser, stripe_customer_id: str | None) -> str:
-        self.checkout_args = (user.sub, stripe_customer_id)
-        return "https://checkout.stripe.test/session"
-
-    def create_billing_portal_session(self, *, stripe_customer_id: str) -> str:
-        self.portal_customer_id = stripe_customer_id
-        return "https://billing.stripe.test/session"
-
-    def cancel_subscription_at_period_end(self, *, stripe_subscription_id: str) -> dict[str, object]:
-        if self.raise_on_cancel is not None:
-            raise self.raise_on_cancel
-        self.cancel_subscription_id = stripe_subscription_id
-        return {
-            "stripe_subscription_id": stripe_subscription_id,
-            "stripe_subscription_status": "active",
-            "cancel_at_period_end": True,
-            "current_period_end": self.cancel_response_current_period_end,
-            "cancellation_requested_at": datetime(2029, 12, 1, tzinfo=timezone.utc),
-        }
-
-    def construct_event(self, payload: bytes, signature: str | None) -> dict[str, object]:
-        del payload
-        del signature
-        if self.raise_on_construct is not None:
-            raise self.raise_on_construct
-        if self.webhook_event is None:
-            raise ValueError("No webhook event configured for the test.")
-        return self.webhook_event
-
-
 def run_migrations(database_url: str) -> None:
     backend_dir = Path(__file__).resolve().parents[1]
     config = Config(str(backend_dir / "alembic.ini"))
@@ -107,22 +59,15 @@ def app(tmp_path: Path):
 
     settings = Settings(
         database_url=database_url,
-        app_base_url="http://localhost:3000",
         vite_auth0_domain="dev-example.us.auth0.com",
         vite_auth0_client_id="client_test_123",
         vite_auth0_audience="https://api.example.test",
         vite_chatkit_api_domain_key="domain_pk_localhost_dev",
-        stripe_secret_key="sk_test_123",
-        stripe_webhook_secret="whsec_test_123",
-        stripe_price_id="price_test_123",
     )
 
     app = create_app(settings)
     app.dependency_overrides[get_token_verifier] = lambda: StubTokenVerifier()
     app.dependency_overrides[get_chatkit_server] = lambda: FakeChatServer()
-    fake_billing_service = FakeBillingService()
-    app.dependency_overrides[get_billing_service] = lambda: fake_billing_service
-    app.state.fake_billing_service = fake_billing_service
     return app
 
 
@@ -134,32 +79,3 @@ def client(app):
 
 def auth_headers() -> dict[str, str]:
     return {"Authorization": "Bearer test-token"}
-
-
-def seed_access(
-    app,
-    *,
-    has_access: bool,
-    stripe_customer_id: str | None = None,
-    stripe_subscription_id: str | None = None,
-    stripe_subscription_status: str | None = None,
-    cancel_at_period_end: bool = False,
-    current_period_end: datetime | None = None,
-) -> None:
-    async def _seed() -> None:
-        async with app.state.session_factory() as session:
-            session.add(
-                CustomerAccess(
-                    auth0_user_id="auth0|user_123",
-                    stripe_customer_id=stripe_customer_id,
-                    stripe_subscription_id=stripe_subscription_id,
-                    stripe_subscription_status=stripe_subscription_status,
-                    stripe_price_id="price_test_123",
-                    cancel_at_period_end=cancel_at_period_end,
-                    current_period_end=current_period_end,
-                    has_access=has_access,
-                )
-            )
-            await session.commit()
-
-    asyncio.run(_seed())

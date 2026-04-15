@@ -1,14 +1,26 @@
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
-import { useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useCallback } from "react";
 import {
+  AUTH0_AUDIENCE,
   CHATKIT_API_DOMAIN_KEY,
   CHATKIT_API_URL,
 } from "../lib/config";
-import { useAccess } from "../auth/access-context";
 
 export function ChatKitPanel() {
-  const navigate = useNavigate();
-  const { authorizedFetch } = useAccess();
+  const { getAccessTokenSilently } = useAuth0();
+  const authorizedFetch: typeof fetch = useCallback(
+    async (input, init) => {
+      const token = await getAccessTokenSilently({
+        authorizationParams: { audience: AUTH0_AUDIENCE },
+      });
+      const headers = new Headers(init?.headers);
+      headers.set("Authorization", `Bearer ${token}`);
+      return fetch(input, { ...init, headers });
+    },
+    [getAccessTokenSilently],
+  );
+
   const chatkit = useChatKit({
     api: {
       url: CHATKIT_API_URL,
@@ -26,12 +38,6 @@ export function ChatKitPanel() {
         icon: "compose",
         onClick: () => {
           void chatkit.setThreadId(null);
-        },
-      },
-      rightAction: {
-        icon: "settings-cog",
-        onClick: () => {
-          void navigate("/subscription");
         },
       },
     },
