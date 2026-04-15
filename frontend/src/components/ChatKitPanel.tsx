@@ -32,15 +32,6 @@ export function ChatKitPanel() {
       showDelete: true,
       showRename: true,
     },
-    header: {
-      enabled: true,
-      leftAction: {
-        icon: "compose",
-        onClick: () => {
-          void chatkit.setThreadId(null);
-        },
-      },
-    },
     startScreen: {
       greeting: "Welcome to ARUN Meditative Juice Coach 🍇🧘",
     },
