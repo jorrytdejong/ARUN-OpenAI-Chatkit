@@ -47,7 +47,9 @@ Run database migrations as part of your deploy/release process.
 The backend is configured for a pre-indexed ARUN retrieval corpus:
 
 - top-level `*.docx` files inside `ARUN data`
-- `juicing_YT_raw_transcripts/*.txt`
+- recursive `juicing_YT_raw_transcripts/**/*.txt`
+- recursive `blogs/**/*.txt`
+- recursive `books/**/*.pdf`
 
 The sync command uploads those files into OpenAI Files, creates or reuses a
 vector store, and writes an incremental manifest locally.
@@ -81,4 +83,4 @@ the backend for normal use.
 - Adjust layout in `frontend/src/components/ChatKitPanel.tsx`.
 - Swap the in-memory store in `backend/app/server.py` for persistence.
 - Extend `backend/app/sync_arun_kb.py` if you want to add deletion cleanup or
-  support more source formats later.
+  support more source folders or formats later.

@@ -13,6 +13,12 @@ from openai import OpenAI
 
 DEFAULT_VECTOR_STORE_NAME = "ARUN Knowledge Base"
 MANIFEST_VERSION = 1
+SUPPORTED_TOP_LEVEL_EXTENSIONS = {".docx"}
+SUPPORTED_NESTED_DIRECTORIES = {
+    "juicing_YT_raw_transcripts": {".txt"},
+    "blogs": {".txt"},
+    "books": {".pdf"},
+}
 
 
 class ArunKBConfigError(RuntimeError):
@@ -107,14 +113,24 @@ class ManifestFileRecord:
 
 
 def discover_source_files(kb_root: Path) -> list[Path]:
-    docx_files = sorted(path for path in kb_root.glob("*.docx") if path.is_file())
-    transcript_dir = kb_root / "juicing_YT_raw_transcripts"
-    transcript_files = []
-    if transcript_dir.exists():
-        transcript_files = sorted(
-            path for path in transcript_dir.glob("*.txt") if path.is_file()
+    source_files = [
+        path
+        for path in sorted(kb_root.iterdir())
+        if path.is_file() and path.suffix.lower() in SUPPORTED_TOP_LEVEL_EXTENSIONS
+    ]
+
+    for directory_name, extensions in SUPPORTED_NESTED_DIRECTORIES.items():
+        directory = kb_root / directory_name
+        if not directory.exists():
+            continue
+
+        source_files.extend(
+            path
+            for path in sorted(directory.rglob("*"))
+            if path.is_file() and path.suffix.lower() in extensions
         )
-    return docx_files + transcript_files
+
+    return source_files
 
 
 def local_file_record(path: Path) -> LocalFileRecord:
