@@ -7,16 +7,19 @@ from datetime import datetime, timezone
 from typing import Any, AsyncIterator
 
 from agents import Agent, FileSearchTool, Runner
-from chatkit.agents import AgentContext, simple_to_agent_input, stream_agent_response
+from chatkit.agents import AgentContext, ResponseStreamConverter, simple_to_agent_input
 from chatkit.server import ChatKitServer
 from chatkit.store import Store
 from chatkit.types import (
+    Annotation,
     AssistantMessageContent,
     AssistantMessageContentPartAdded,
     AssistantMessageContentPartAnnotationAdded,
     AssistantMessageContentPartDone,
     AssistantMessageContentPartTextDelta,
     AssistantMessageItem,
+    EntitySource,
+    FileSource,
     ThreadItem,
     ThreadItemAddedEvent,
     ThreadItemDoneEvent,
@@ -28,6 +31,7 @@ from chatkit.types import (
 from pydantic import BaseModel, Field
 
 from .arun_kb import ArunKBConfig
+from .streaming import stream_agent_response_with_snippets
 
 
 logger = logging.getLogger(__name__)
@@ -69,6 +73,81 @@ class PromptSuggestionResponse(BaseModel):
 
 class SuggestedQuestionList(BaseModel):
     questions: list[str] = Field(min_length=3, max_length=3)
+
+
+class ArunCitationConverter(ResponseStreamConverter):
+    """Enrich file citations with snippet previews for the frontend source hover."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._file_search_results: dict[str, list[str]] = {}
+
+    def remember_file_search_results(self, results: list[object]) -> None:
+        for result in results:
+            file_id = getattr(result, "file_id", None)
+            text = getattr(result, "text", None)
+            if not file_id or not text:
+                continue
+            snippets = self._file_search_results.setdefault(file_id, [])
+            if text not in snippets:
+                snippets.append(text)
+
+    def get_file_search_result(self, file_id: str | None) -> str | None:
+        if not file_id:
+            return None
+        snippets = self._file_search_results.get(file_id)
+        if not snippets:
+            return None
+        return snippets[0]
+
+    def _source_annotation(
+        self,
+        *,
+        file_id: str | None,
+        filename: str | None,
+        index: int | None,
+    ) -> Annotation | None:
+        if not filename:
+            return None
+
+        snippet = self.get_file_search_result(file_id)
+        if not snippet:
+            return Annotation(
+                source=FileSource(filename=filename, title=filename),
+                index=index,
+            )
+
+        return Annotation(
+            source=EntitySource(
+                id=f"source:{file_id or filename}:{index or 0}",
+                title=filename,
+                label="Source",
+                icon="file",
+                description="Hover to preview the cited excerpt.",
+                interactive=True,
+                data={
+                    "filename": filename,
+                    "snippet": snippet,
+                },
+            ),
+            index=index,
+        )
+
+    async def file_citation_to_annotation(self, file_citation) -> Annotation | None:
+        return self._source_annotation(
+            file_id=file_citation.file_id,
+            filename=file_citation.filename,
+            index=file_citation.index,
+        )
+
+    async def container_file_citation_to_annotation(
+        self, container_file_citation
+    ) -> Annotation | None:
+        return self._source_annotation(
+            file_id=container_file_citation.file_id,
+            filename=container_file_citation.filename,
+            index=container_file_citation.end_index,
+        )
 
 
 def build_assistant_agent() -> Agent[AgentContext[dict[str, Any]]]:
@@ -184,8 +263,13 @@ class StarterChatServer(ChatKitServer[dict[str, Any]]):
                 agent_input,
                 context=agent_context,
             )
+            converter = ArunCitationConverter()
 
-            async for event in stream_agent_response(agent_context, result):
+            async for event in stream_agent_response_with_snippets(
+                agent_context,
+                result,
+                converter=converter,
+            ):
                 if isinstance(event, ThreadItemAddedEvent) and isinstance(
                     event.item, AssistantMessageItem
                 ):
