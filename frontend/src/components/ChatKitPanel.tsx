@@ -33,7 +33,7 @@ export function ChatKitPanel() {
       showRename: true,
     },
     startScreen: {
-      greeting: "Welcome to ARUN Meditative Juice Coach 🍇🧘",
+      greeting: "Welcome to ARUN Meditative Juice Guru 🍇🧘",
     },
     composer: {
       // File uploads stay off in v1 because retrieval uses a pre-indexed ARUN corpus.
